@@ -124,11 +124,7 @@ void ExibirTituloDaOpcao(String titulo) // Parâmetro do tipo string chamado tit
     Console.WriteLine(asterisco);
 }
 
-// Função para avaliar uma banda.
-// Primeiro é feito a limpeza do terminal.
-// Em seguida, é exibido o título da opção escolhida. Que é feito através de uma função que recebe o título como parâmetro.
-// Depois, é exibida a lista de bandas registradas para que o usuário possa escolher qual banda deseja avaliar, tudo isso através de um loop foreach que percorre todas as chaves do dicionário bandasRegistradas.
-// Em seguida, é solicitado ao usuário que digite o nome da banda que deseja avaliar.
+
 void AvaliarMusica()
 {
     Console.Clear();
@@ -142,7 +138,7 @@ void AvaliarMusica()
     Banda bandaEncontrada = bandasRegistradas.FirstOrDefault(b => b.Nome == nomeDaBanda)!;
     if (bandaEncontrada != null) 
     {
-        if (bandasRegistradas.ListaMusicas.Count <= 0)
+        if (bandaEncontrada.ListaMusicas.Count <= 0)
         {
             Console.Write($"\nA banda {bandaEncontrada.Nome} ainda não possui nenhuma música para ser avaliada.");
             Console.ReadKey();
@@ -151,23 +147,31 @@ void AvaliarMusica()
         } else{
         do{
             Console.Write($"Qual musica da banda {bandaEncontrada.Nome} você deseja avaliar? \n");
-            foreach (Musica musica in bandasRegistradas.ListaMusicas)
+            Console.Write($"Ou digite F para voltar ao menu principal.\n");
+            foreach (Musica musica in bandaEncontrada.ListaMusicas)
                 {
                     Console.WriteLine($"Música: {musica.Nome}");
                 }
             string musicaSelecionada = Console.ReadLine()!;
-            Musica musicaExiste = bandasRegistradas.ListaMusicas.FirstOrDefault(m => m.Nome == musicaSelecionada);
+            if (musicaSelecionada == "F"){
+                Console.WriteLine("\nVocê será redirecionado...");
+                Thread.Sleep(3000);
+                Console.Clear();
+                ExibirOpcoesDoMenu();
+                break;   
+                }
+            Musica musicaExiste = bandaEncontrada.ListaMusicas.FirstOrDefault(m => m.Nome == musicaSelecionada)!;
             if (musicaExiste != null){
                 Console.Write("Digite a nota para a música: ");    
                 int nota = int.Parse(Console.ReadLine()!);
-                bandasRegistradas.ListaMusica.Nome.notas.Add(nota);
+                musicaExiste.Notas.Add(nota);
                 Console.WriteLine($"A nota foi registrada com sucesso para a musica {musicaSelecionada} da banda {bandaEncontrada.Nome}.");
                 break;
             }
             else
             {
                 Console.WriteLine($"A música {musicaSelecionada} não existe ou foi digitada incorretamente.\n");
-                Console.WriteLine($"Pressione qualquer tecla para voltar ao menu principal. Após, ser redirecionado, selecione a opção 1 para cadastrar a banda {nomeDaBanda} e siga as instruções.");
+                Console.WriteLine($"Pressione qualquer tecla para digitar a música novamente.");
                 Console.ReadKey();
                 Console.Clear();        
             }
@@ -185,26 +189,22 @@ void AvaliarMusica()
     }
 }
 
-// Função para exibir a média de uma banda.
-// Primeiro é feito a limpeza do terminal.
-// Em seguida, é exibido o título da opção escolhida. Que é feito através de uma função que recebe o título como parâmetro.
-// Depois, é exibida a lista de bandas registradas para que o usuário possa escolher qual banda deseja ver a média, tudo isso através de um loop foreach que percorre todas as chaves do dicionário bandasRegistradas.
 void ExibirMediaDaBanda()
 {
     Console.Clear();
     ExibirTituloDaOpcao("Exibindo a média de uma banda");
     Console.WriteLine("\nBandas registradas: \n");
     
-    foreach (string banda in bandasRegistradas.Keys)
+    foreach (string banda in bandasRegistradas)
     {
         Console.WriteLine($"Banda: {banda}");
     }
     Console.Write("\nDigite o nome da banda que você deseja ver a média: ");
     string bandaDesejada = Console.ReadLine()!;
-    if (bandasRegistradas.ContainsKey(bandaDesejada)) // ContainsKey é um método do dicionário que verifica se a chave especificada existe no dicionário. Retorna true se a chave existir, caso contrário, retorna false.
+    Banda bandaEncontrada = bandasRegistradas.FirstOrDefault(b => b.Nome == bandaDesejada)!;
+    if (bandaEncontrada != null) 
     {
-        double media = bandasRegistradas[bandaDesejada].Average(); // Average é um método do LINQ que calcula a média dos elementos de uma coleção. No caso, estamos calculando a média das notas da banda desejada.
-        // Procuramos a banda desejada no dicionário bandasRegistradas, acessamos a lista de notas associada a essa banda e chamamos o método Average() para calcular a média das notas.
+        double media = bandasRegistradas[bandaDesejada].Average(); 
         Console.WriteLine($"A média da banda {bandaDesejada} é: {media}");
         Console.WriteLine($"Pressione qualquer tecla para voltar ao menu principal.");
         Console.ReadKey();
@@ -225,13 +225,13 @@ void RegistrarMusica()
     Console.Clear();
     ExibirTituloDaOpcao("Registrando uma música");
     Console.Write("\nBanda autora: \n");
-    foreach (string banda in bandasRegistradas.Keys)
+    foreach (Banda banda in bandasRegistradas)
     {
         Console.WriteLine($"Banda: {banda}");
     }
     Console.Write("\nDigite o nome da banda que você deseja registrar a música: \n");
     string nomeBanda = Console.ReadLine()!;
-    Banda bandaEncontrada = bandasRegistradas.FirstOrDefault(b => b.bandasRegistradas == nomeBanda);
+    Banda bandaEncontrada = bandasRegistradas.FirstOrDefault(b => b.Nome == nomeBanda)!;
     if (bandaEncontrada != null)
     {
         Console.Write("\nDigite o nome da música: \n");
@@ -241,7 +241,7 @@ void RegistrarMusica()
         Console.Write("\nDigite a duração da música em segundos: \n");
         int duracaoMusica = int.Parse(Console.ReadLine()!);
 
-        Musica novaMusica = new Musica(nomeMusica, generoMusica, duracaoMusica);
+        Musica novaMusica = new Musica(nomeMusica, generoMusica, duracaoMusica, new List<double>());
         bandaEncontrada.ListaMusicas.Add(novaMusica);
         
         Console.WriteLine($"\nA música {novaMusica.Nome} da banda {nomeBanda} foi registrada com sucesso!");
