@@ -37,6 +37,21 @@ void ExibirLogo()
 
 // Criação do Menu.
 // Função void para exibir as opções do menu e chamar outras funções com base na escolha do usuário.
+
+
+//Ver informações de Bandas:
+//    ------- Nome da Banda | Nota | Gênero | Lista de Músicas |
+//    -------------  Ver Lista das Músicas | Cadastrar uma nova Banda | Alterar informações de uma Banda | Deletar Banda | 
+//Ver informações de Músicas:
+//    ------ Selecione a Banda
+//    -------------  Informações das músicas | Cadastrar nova música | Altera informações de uma música | Deletar uma música
+//Ver notas:
+//    ------ Selecione a Banda
+//    -------------  Informações gerais de notas | Dar nota para a Banda | Dar nota para a música | Alterar Notas | Excluir Notas
+// Sair do programa.
+
+
+
 void ExibirOpcoesDoMenu()
 {
     ExibirLogo();
@@ -195,7 +210,7 @@ void ExibirMediaDaBanda()
     ExibirTituloDaOpcao("Exibindo a média de uma banda");
     Console.WriteLine("\nBandas registradas: \n");
     
-    foreach (string banda in bandasRegistradas)
+    foreach (Banda banda in bandasRegistradas)
     {
         Console.WriteLine($"Banda: {banda}");
     }
@@ -204,8 +219,8 @@ void ExibirMediaDaBanda()
     Banda bandaEncontrada = bandasRegistradas.FirstOrDefault(b => b.Nome == bandaDesejada)!;
     if (bandaEncontrada != null) 
     {
-        double media = bandasRegistradas[bandaDesejada].Average(); 
-        Console.WriteLine($"A média da banda {bandaDesejada} é: {media}");
+        //double media = bandasRegistradas[bandaDesejada].Average(); -- Erro aqui
+        //Console.WriteLine($"A média da banda {bandaDesejada} é: {media}"); -- Erro aqui
         Console.WriteLine($"Pressione qualquer tecla para voltar ao menu principal.");
         Console.ReadKey();
         Console.Clear();
