@@ -1,26 +1,12 @@
 ﻿// Screen Sound
 using System.Globalization;
 using System.Linq.Expressions;
-
-
+using System.Runtime.Serialization;
 string mensagemDeBoasVindas = "Boas vindas ao Screen Sound";
-//List<string> listaDasBandas = new List<string> {"U2", "The Beatles", "Calypso"};  
-
-// Dicionário de bandas registradas, onde a chave é o nome da banda
-// e o valor é uma lista de notas (inteiros) atribuídas a essa banda.
-
-// Lista vazia por conta dos parênteses no final.
-// Chaves são string e valores são listas de inteiros.
 List<Banda> bandasRegistradas = new List<Banda>();
-
-// Adicionando bandas ao dicionário com notas iniciais.
-// nomeDoDicionário + .Add -> Realizando a adição de elementos ao dicionário.
-// Repare como precisou colocar new List<int> para criar uma nova lista de inteiros para cada banda.
 List<Musica> listaDeMusicas = new List<Musica>();
 
 
-// Função void para exibir a logo do Screen Sound no console.
-// O "@" antes da string permite que a string seja interpretada como um literal, preservando quebras de linha e outros caracteres especiais.
 void ExibirLogo()
 {
     Console.WriteLine(@"
@@ -35,32 +21,51 @@ void ExibirLogo()
     Console.WriteLine(mensagemDeBoasVindas);
 }
 
-// Criação do Menu.
-// Função void para exibir as opções do menu e chamar outras funções com base na escolha do usuário.
-
-
-//Ver informações de Bandas:
-//    ------- Nome da Banda | Nota | Gênero | Lista de Músicas |
-//    -------------  Ver Lista das Músicas | Cadastrar uma nova Banda | Alterar informações de uma Banda | Deletar Banda | 
-//Ver informações de Músicas:
-//    ------ Selecione a Banda
-//    -------------  Informações das músicas | Cadastrar nova música | Altera informações de uma música | Deletar uma música
-//Ver notas:
-//    ------ Selecione a Banda
-//    -------------  Informações gerais de notas | Dar nota para a Banda | Dar nota para a música | Alterar Notas | Excluir Notas
-// Sair do programa.
-
-
-
 void ExibirOpcoesDoMenu()
 {
     ExibirLogo();
-    Console.WriteLine("\nDigite 1 para registrar uma banda");
-    Console.WriteLine("Digite 2 para mostrar todas as bandas");
-    Console.WriteLine("Digite 3 para avaliar uma música");
-    Console.WriteLine("Digite 4 para exibir a média de uma banda");
-    Console.WriteLine("Digite 5 para registrar uma música");
-    Console.WriteLine("Digite -1 para sair");
+    Console.WriteLine("\nDigite 1 para ver as informações de bandas.");
+    Console.WriteLine("Digite 2 para ver informações de músicas");
+    Console.WriteLine("Digite 3 para ver notas");
+    Console.WriteLine("Digite 4 para sair");
+
+    Console.Write("\nDigite a sua opção: ");
+    string opcaoEscolhida = Console.ReadLine()!;
+    int opcaoEscolhidaNumerica = int.Parse(opcaoEscolhida);
+    
+    switch (opcaoEscolhidaNumerica)
+    {
+        case 1: VerBandas();
+                SubMenuBandas();
+            break;
+        case 2: VerMusicas();
+                SubMenuMusicas();
+            break;
+        case 3: VerNotas();
+                SubMenuNotas();
+            break;
+        case 4: Console.WriteLine("Tchau tchau :)");;
+            break;
+        default: Console.WriteLine("Opção inválida");
+            break;
+    }
+}
+
+void VerBandas()
+{
+    Console.Clear();
+    Thread.Sleep(1000);
+    ExibirTituloDaOpcao("Tela de Bandas");
+    Thread.Sleep(1000);
+    ExibirListaDeBandas();
+}
+
+void SubMenuBandas(){
+    Console.WriteLine("\nDigite 1 para cadastrar uma nova banda.");
+    Console.WriteLine("Digite 2 para alterar informação de banda.");
+    Console.WriteLine("Digite 3 para deletar banda.");
+    Console.WriteLine("Digite 4 para ver músicas de uma banda.");
+    Console.WriteLine("Digite 5 para voltar ao menu principal.");
 
     Console.Write("\nDigite a sua opção: ");
     string opcaoEscolhida = Console.ReadLine()!;
@@ -70,26 +75,19 @@ void ExibirOpcoesDoMenu()
     {
         case 1: RegistrarBanda();
             break;
-        case 2: ExibirListaDeBandas();
+        case 2: AlterarBanda();
             break;
-        case 3: AvaliarMusica();
+        case 3: DeletarBanda();
             break;
-        case 4: ExibirMediaDaBanda();
+        case 4: VerMusica();
             break;
-        case 5: RegistrarMusica();
-            break;
-        case -1: Console.WriteLine("Tchau tchau :)");
-            break;
+        case 5: ExibirOpcoesDoMenu();
+            return;
         default: Console.WriteLine("Opção inválida");
             break;
-    }
+}
 }
 
-// Função de registrar uma banda.
-// Primeiro é feito a limpeza do terminal.
-// Em seguida, é exibido o título da opção escolhida. Que é feito através de uma função que recebe o título como parâmetro.
-// Depois, é solicitado ao usuário que digite o nome da banda que deseja registrar. Essa string é guardada em uma variável chamada nomeDaBanda.
-// Em seguida, é adicionado ao dicionário bandasRegistradas a chave nomeDaBanda e um novo valor que é uma lista de inteiros vazia.
 void RegistrarBanda()
 {
     Console.Clear();
@@ -104,41 +102,201 @@ void RegistrarBanda()
     ExibirOpcoesDoMenu();
 }
 
-// Função para exibir a lista de bandas registradas.
-// Primeiro é feito a limpeza do terminal.
-// Em seguida, é exibido o título da opção escolhida. Que é feito através de uma função que recebe o título como parâmetro.
-// Utilização de um loop foreach para percorrer todas as chaves do dicionário bandasRegistradas e exibir o nome de cada banda.
-void ExibirListaDeBandas()
+void AlterarBanda()
 {
     Console.Clear();
-    ExibirTituloDaOpcao("Exibindo todas as bandas registradas!");
-    /*for (int i=0; i < listaDasBandas.Count; i++)*/
-    foreach (Banda banda in bandasRegistradas) // Listando objetos do tipo Banda, que é a classe que criamos. Através do foreach, podemos percorrer todos os elementos da lista bandasRegistradas e exibir o nome de cada banda.
+    Thread.Sleep(1000);
+    ExibirTituloDaOpcao("Alterar Bandas...");
+    Thread.Sleep(1000);
+    Banda bandaEncontrada = ValidarBanda();
+    if (bandaEncontrada != null)
     {
-        Console.WriteLine($"Banda: {banda.Nome}");
+        Console.WriteLine("\nDigite a opção de alteração: ");
+        Console.WriteLine("1 - Nome. ");
+        Console.WriteLine("2 - Gênero. ");
+        int opcao = int.Parse(Console.ReadLine()!);
+        Thread.Sleep(1500);
+        Console.Clear();
+        if (opcao == 1)
+        {
+            Console.WriteLine("Digite o novo nome: ");
+            string novoNome = Console.ReadLine()!;
+            bandaEncontrada.Nome = novoNome;
+            Console.WriteLine("Nome atualizado com sucesso.");
+
+        } else if (opcao == 2)
+        {
+            Console.WriteLine("Digite o novo gênero: ");
+            string novoGenero = Console.ReadLine()!;
+            bandaEncontrada.Genero = novoGenero;
+            Console.WriteLine("Gênero atualizado com sucesso.");
+        }else
+        {
+            Console.WriteLine("Opção inválida. Aperte qualquer tecla para tentar novamente.");
+            Console.ReadKey();
+            Thread.Sleep(1500);
+            AlterarBanda();
+            return;
+        }
+
+    }else
+    {
+        ValidacaoNegativa();
+        return;
     }
-    Console.WriteLine("\nPressione qualquer tecla para voltar ao menu principal.");
+    Console.WriteLine($"Pressione qualquer tecla para voltar ao menu principal.");
+    Console.ReadKey();
+    Console.Clear();
+    ExibirOpcoesDoMenu();
+
+}
+
+void DeletarBanda()
+{
+    Console.Clear();
+    Thread.Sleep(1000);
+    ExibirTituloDaOpcao("Deletar Bandas...");
+    Thread.Sleep(1000);
+    Banda bandaEncontrada = ValidarBanda();
+    if (bandaEncontrada != null)
+    {
+        Console.WriteLine("\nTem certeza que deseja deletar essa banda? ");
+        Console.WriteLine("Essa ação não pode ser desfeita.\n");
+        Console.WriteLine("1 - Sim. ");
+        Console.WriteLine("2 - Não. ");
+        int opcao = int.Parse(Console.ReadLine()!);
+        Thread.Sleep(1500);
+        Console.Clear();
+        if (opcao == 1)
+        {
+            bandasRegistradas.Remove(bandaEncontrada);
+            Console.WriteLine("Banda deletada com sucesso.");
+
+        } else if (opcao == 2)
+        {
+            Console.Clear();
+            Thread.Sleep(1500);
+            Console.WriteLine($"Pressione qualquer tecla para voltar ao menu principal.");
+            Console.ReadKey();
+            Console.Clear();
+            ExibirOpcoesDoMenu();
+            return;       
+        }
+        else
+        {
+            Console.WriteLine("Opção inválida. Aperte qualquer tecla para tentar novamente.");
+            Console.ReadKey();
+            Thread.Sleep(1500);
+            DeletarBanda();
+            return;
+        }
+    }else
+    {
+        ValidacaoNegativa();
+        return;
+    }
+    Console.WriteLine($"Pressione qualquer tecla para voltar ao menu principal.");
+    Console.ReadKey();
+    Console.Clear();
+    ExibirOpcoesDoMenu();
+
+}
+
+void VerMusicas()
+{
+    Console.Clear();
+    Thread.Sleep(1000);
+    ExibirTituloDaOpcao("Ver Músicas...");
+    Thread.Sleep(1000);
+    Banda bandaEncontrada = ValidarBanda();
+    if (bandaEncontrada != null)
+    {
+        if (bandaEncontrada.ListaMusicas.Count <= 0)
+        {
+            Console.Write($"\nA banda {bandaEncontrada.Nome} ainda não possui nenhuma música para ser avaliada.");
+            Console.ReadKey();
+            Console.WriteLine("Pressione qualquer tecla para voltar ao menu anterior.");
+            VerMusica();
+            return;
+        } else{
+            foreach (Musica musica in bandaEncontrada.ListaMusicas)
+                {
+                    Console.WriteLine($"Música: {musica.Nome}");
+                }
+        }
+    }
+    else
+    {
+        ValidacaoNegativa();
+        return;
+    }
+    Console.WriteLine($"Pressione qualquer tecla para voltar ao menu principal.");
     Console.ReadKey();
     Console.Clear();
     ExibirOpcoesDoMenu();
 }
 
-// Função para exibir o título da opção escolhida.
-// Primeiro é calculado o tamanho do título com a propriedade Length da string.
-// Esse valor é armazenado em uma variável chamada tamanhoTitulo.
-// Em seguida, é criado uma string de asteriscos com o mesmo tamanho do título utilizando o método PadLeft.
-// O método PadLeft coloca a string original à esquerda e preenche o restante com o caractere especificado (neste caso, o asterisco).
-// Como utilizamos string.Empty, estamos começando com uma string vazia e adicionando asteriscos à esquerda até atingir o tamanho desejado.
-// A função rece be o título como parâmetro e exibe o título e os asteriscos no console.
-void ExibirTituloDaOpcao(String titulo) // Parâmetro do tipo string chamado titulo
+void SubMenuMusicas()
+{
+    Console.WriteLine("\nDigite 1 para cadastrar uma nova música.");
+    Console.WriteLine("Digite 2 para alterar informação de uma música.");
+    Console.WriteLine("Digite 3 para deletar música.");
+    Console.WriteLine("Digite 4 para voltar ao menu principal.");
+
+    Console.Write("\nDigite a sua opção: ");
+    string opcaoEscolhida = Console.ReadLine()!;
+    int opcaoEscolhidaNumerica = int.Parse(opcaoEscolhida);
+    
+    switch (opcaoEscolhidaNumerica)
+    {
+        case 1: RegistrarMusica();
+            break;
+        case 2: AlterarMusica();
+            break;
+        case 3: DeletarMusica();
+            break;
+        case 4: ExibirOpcoesDoMenu();
+            return;
+        default: Console.WriteLine("Opção inválida");
+            break;
+}
+}
+}
+
+void ValidacaoNegativa()
+{
+    Console.WriteLine($"A banda não foi encontrada.");
+    Console.WriteLine($"Pressione qualquer tecla para voltar ao menu principal.");
+    Console.ReadKey();
+    Console.Clear();
+    ExibirOpcoesDoMenu();
+
+}
+
+Banda ValidarBanda(){
+    Console.Write("\nDigite o nome da banda: ");
+    string bandaDesejada = Console.ReadLine()!;
+    Banda bandaEncontrada = bandasRegistradas.FirstOrDefault(b => b.Nome == bandaDesejada)!;
+    return bandaEncontrada;
+}
+
+void ExibirListaDeBandas()
+{
+    ExibirTituloDaOpcao("Exibindo todas as bandas registradas!");
+    foreach (Banda banda in bandasRegistradas)
+    {
+        Console.WriteLine($"Banda: {banda.Nome}");
+    }
+}
+
+void ExibirTituloDaOpcao(String titulo)
 {
     int tamanhoTitulo = titulo.Length;
     string asterisco = string.Empty.PadLeft(tamanhoTitulo, '*');
     Console.WriteLine(asterisco);
-    Console.WriteLine(titulo); // Assume o Parâmetro titulo e exibe no console.
+    Console.WriteLine(titulo); 
     Console.WriteLine(asterisco);
 }
-
 
 void AvaliarMusica()
 {
@@ -214,9 +372,7 @@ void ExibirMediaDaBanda()
     {
         Console.WriteLine($"Banda: {banda}");
     }
-    Console.Write("\nDigite o nome da banda que você deseja ver a média: ");
-    string bandaDesejada = Console.ReadLine()!;
-    Banda bandaEncontrada = bandasRegistradas.FirstOrDefault(b => b.Nome == bandaDesejada)!;
+    Banda bandaEncontrada = ValidarBanda();
     if (bandaEncontrada != null) 
     {
         //double media = bandasRegistradas[bandaDesejada].Average(); -- Erro aqui
