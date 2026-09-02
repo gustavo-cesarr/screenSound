@@ -261,7 +261,6 @@ void SubMenuMusicas()
             break;
 }
 }
-}
 
 void ValidacaoNegativa()
 {
